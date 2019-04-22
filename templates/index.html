@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link href="{{url_for('static', filename='style.css')}}" rel="stylesheet" type="text/css"></link>
+    </head>
+    <body>
+        <script src={{url_for("static", filename="lib/d3.v5.min.js")}}></script>
+        <script src={{url_for("static", filename="lib/playlists.js")}}></script>
+        <script>
+          var nodes = {{ user.nodes | safe }}
+          var edges = {{ user.edges | safe }}
+          explore(nodes, edges)
+        </script>
+    </body>
+</html>
