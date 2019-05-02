@@ -30,3 +30,7 @@ project/plugins/project/
 .lib/
 dist/*
 project/boot/
+
+# js specific
+node_modules
+bundle.js
