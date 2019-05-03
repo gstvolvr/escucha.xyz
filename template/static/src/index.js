@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
 import { artists, genres } from './docs/data';
-import { css } from 'emotion';
 
 const components = {
   DropdownIndicator: null,
@@ -16,62 +15,25 @@ const createOption = (label: string) => ({
   label: getUserId(label),
   value: getUserId(label),
 })
-const colourStyles = {
-  control: styles => ({ ...styles, backgroundColor: 'white' }),
-  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    const color = "black";
-    return {
-      ...styles,
-      backgroundColor: isDisabled
-        ? null
-        : isSelected ? data.color : isFocused ? color.alpha(0.1).css() : null,
-      color: isDisabled
-        ? '#ccc'
-        : isSelected
-          ? 'black'
-          : data.color,
-      cursor: isDisabled ? 'not-allowed' : 'default',
-    };
-  },
-  multiValue: (styles, { data }) => {
-    const color = "black"
-    return {
-      ...styles,
-      backgroundColor: color.alpha(0.1).css(),
-    };
-  },
-  multiValueLabel: (styles, { data }) => ({
-    ...styles,
-    color: data.color,
-  }),
-  multiValueRemove: (styles, { data }) => ({
-    ...styles,
-    color: data.color,
-    ':hover': {
-      backgroundColor: data.color,
-      color: 'white',
-    },
-  }),
-};
-
-const customStyles = {
-  option: (provided, state) => ({
-    ...provided,
-    borderBottom: '1px dotted pink',
-    color: state.isSelected ? 'red' : 'blue',
-    padding: 60,
-  }),
-  control: () => ({
-    // none of react-select's styles are passed to <Control />
-    width: 100,
-  }),
-  singleValue: (provided, state) => {
-    const opacity = state.isDisabled ? 0.5 : 1;
-    const transition = 'opacity 300ms';
-
-    return { ...provided, opacity, transition };
+const themes = (theme) => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary25: '#FFB9D6',
+    primary: "#484848",
+    primary50: "black",
+    neutral90: "black",
+    neutral80: "black", // text color once chosen
+    neutral50: "#484848", // placeholder color
+    neutral20: "#DCDCDC", // border and features
+    neutral30: "#FEFEFE", // border during hover
+    neutral40: "#484848", // features during hover and text when empty
+    neutral10: "#FFB9D6",
+    neutral5: "#DCDCDC",
+    neutral0: "#FEFEFE", // background color
+    dangerLight: null,
   }
-}
+})
 
 export default class Recommender extends React.Component<*, State> {
   state = {
@@ -122,6 +84,7 @@ export default class Recommender extends React.Component<*, State> {
               onKeyDown={this.handleKeyDown}
               placeholder="Paste a link to one of your Spotify playlists"
               value={value}
+              theme={themes}
             />
         </div>
         <div className='react-select-container'>
@@ -132,6 +95,7 @@ export default class Recommender extends React.Component<*, State> {
               defaultValue={[]}
               options={artists}
               placeholder="Or choose some artists you like"
+              theme={themes}
             />
         </div>
         <div className='react-select-container'>
@@ -142,6 +106,7 @@ export default class Recommender extends React.Component<*, State> {
               defaultValue={[]}
               options={genres}
               placeholder="What genres are you in the mood for?"
+              theme={themes}
             />
         </div>
       </div>

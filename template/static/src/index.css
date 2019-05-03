@@ -4,37 +4,37 @@
 }
 body {
   font-family: avenir;
-  /* color: #484848; */
-  /* background-color: #7D4CDB; */
-  /* color: #FFFFFF; */
   color: #484848;
-  /* background-color: #FFABD3; */
-	/* background-color: #461088; */
-  /* background-color: #BE8CFF; */
-  /* background-color: #872D5F; */
-  /* background-color: #A9BFA6; */
-  /* background-color: #0088CC; */
-  /* background-color: #231F20; */
-  /* background-color: #222D65; */
   background-color: #D4D8E8;
   margin-right:15em;
   margin-left:15em;
   display: block;
 }
-
 h1 {
-  /* margin: auto; */
+  margin: auto;
 }
 p {
   margin: 1em;
 }
 .react-select-container {
   /* width: 25em; */
+  color: "black";
   margin: 1em;
 }
 .container {
   width: 75%;
   margin: auto;
+}
+.left-container {
+  height: 100%;
+  width: 20%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #222; /*#D4D8E8; */
+  overflow-x: hidden;
+  padding-top: 20px;
 }
 .masthead {
   margin-bottom: 2em;
@@ -60,51 +60,27 @@ p {
 	padding-top:10px;
 	padding-bottom: 10px;
 }
-.slider {
-  -webkit-appearance: none;  /* Override default CSS styles */
-  appearance: none;
-  width: 30%; /* Full-width */
-  height: 25px; /* Specified height */
-  /* background: #d3d3d3; /* Grey background */ */
-  outline: none; /* Remove outline */
-  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
-  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
-  transition: opacity .2s;
-  border-radius: 20px;
-}
-.slider:focus {
-  outline: none;
-}
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 25px;
-  height: 25px;
-  background: #7D4CDB;
-  cursor: pointer; /* Cursor on hover */
-}
-
-.slider::-moz-range-thumb {
-  width: 25px;
-  height: 25px;
-  background: #4CAF50;
-  cursor: pointer;
-}
-
 button {
   display: block;
   width: 100%;
+  margin: 1em;
 
   /* height: 50%; */
   border-radius: 5px;
   background-color:#FFFFFF;
-  margin-right:auto;
-  margin-left:auto;
+  /* margin-right:auto; */
+  /* margin-left:auto; */
   color: #484848;
   font-family: avenir;
 }
 button:focus {
   outline: none;
+}
+.recommender {
+  color: #484848
+}
+.react-select-container::placeholder {
+  color: #484848
 }
 .borderless_input:focus {
   outline: none;
@@ -120,7 +96,6 @@ button:focus {
   background-color: #D4D8E8;
 	text-align: center;
 }
-
 .margin_right {
 	 margin-right: 80px;
 }
