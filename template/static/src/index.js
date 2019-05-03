@@ -2,15 +2,76 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/lib/Creatable';
-import { artists } from './docs/data';
+import { artists, genres } from './docs/data';
+import { css } from 'emotion';
 
 const components = {
   DropdownIndicator: null,
 }
+const rawOption = (label: string) => ({
+  label: label,
+  value: label,
+})
 const createOption = (label: string) => ({
   label: getUserId(label),
   value: getUserId(label),
 })
+const colourStyles = {
+  control: styles => ({ ...styles, backgroundColor: 'white' }),
+  option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+    const color = "black";
+    return {
+      ...styles,
+      backgroundColor: isDisabled
+        ? null
+        : isSelected ? data.color : isFocused ? color.alpha(0.1).css() : null,
+      color: isDisabled
+        ? '#ccc'
+        : isSelected
+          ? 'black'
+          : data.color,
+      cursor: isDisabled ? 'not-allowed' : 'default',
+    };
+  },
+  multiValue: (styles, { data }) => {
+    const color = "black"
+    return {
+      ...styles,
+      backgroundColor: color.alpha(0.1).css(),
+    };
+  },
+  multiValueLabel: (styles, { data }) => ({
+    ...styles,
+    color: data.color,
+  }),
+  multiValueRemove: (styles, { data }) => ({
+    ...styles,
+    color: data.color,
+    ':hover': {
+      backgroundColor: data.color,
+      color: 'white',
+    },
+  }),
+};
+
+const customStyles = {
+  option: (provided, state) => ({
+    ...provided,
+    borderBottom: '1px dotted pink',
+    color: state.isSelected ? 'red' : 'blue',
+    padding: 60,
+  }),
+  control: () => ({
+    // none of react-select's styles are passed to <Control />
+    width: 100,
+  }),
+  singleValue: (provided, state) => {
+    const opacity = state.isDisabled ? 0.5 : 1;
+    const transition = 'opacity 300ms';
+
+    return { ...provided, opacity, transition };
+  }
+}
 
 export default class Recommender extends React.Component<*, State> {
   state = {
@@ -48,28 +109,41 @@ export default class Recommender extends React.Component<*, State> {
   render() {
     const { inputValue, value } = this.state;
     return (
-      <div className="select">
-          <CreatableSelect
-            components={components}
-            inputValue={inputValue}
-            isClearable
-            isMulti
-            menuIsOpen={false}
-            onChange={this.handleChange}
-            onInputChange={this.handleInputChange}
-            onKeyDown={this.handleKeyDown}
-            placeholder="Type something and press enter..."
-            value={value}
-          />
-
-          <Select
-            isMulti
-            defaultInputValue=""
-            onChange={this.handleChange}
-            defaultValue={[]}
-            options={artists}
-            placeholder="Or choose artists to based your recommendations on"
-          />
+      <div className='recommender'>
+        <div className='react-select-container'>
+            <CreatableSelect
+              components={components}
+              inputValue={inputValue}
+              isClearable
+              isMulti
+              menuIsOpen={false}
+              onChange={this.handleChange}
+              onInputChange={this.handleInputChange}
+              onKeyDown={this.handleKeyDown}
+              placeholder="Paste a link to one of your Spotify playlists"
+              value={value}
+            />
+        </div>
+        <div className='react-select-container'>
+            <Select
+              isMulti
+              defaultInputValue=""
+              onChange={this.handleChange}
+              defaultValue={[]}
+              options={artists}
+              placeholder="Or choose some artists you like"
+            />
+        </div>
+        <div className='react-select-container'>
+            <Select
+              isMulti
+              defaultInputValue=""
+              onChange={this.handleChange}
+              defaultValue={[]}
+              options={genres}
+              placeholder="What genres are you in the mood for?"
+            />
+        </div>
       </div>
     )
   }

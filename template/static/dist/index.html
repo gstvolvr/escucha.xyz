@@ -3,9 +3,34 @@
 
 <head>
     <meta charset="utf-8">
-    <title>escuchae.xyz</title>
+    <title>escucha</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/src/index.css">
+
 </head>
   <body>
-    <div id="root"></div>
-  <script type="text/javascript" src="dist/bundle.js"></script></body>
+    <div class="container">
+      <div class="page">
+        <header class="masthead">
+          <h1 class="masthead-title">
+            <a href="/" title="posts">/escucha</a>
+          </h1>
+        </header>
+        <p>
+          Take control over your artist recommendations
+        </p>
+        <div id="root"></div>
+        <p>
+          Don't recommend anyone who is in the top <input id="0_to_100" type="text" class="borderless_input" value=25> % of popular artists
+        </p>
+        <p>
+          And recommend total of <input id="0_to_50" type="text" class="borderless_input" value=5> artists
+        </p>
+				<script>
+          console.log(document.getElementById("0_to_100"))
+				</script>
+        <button type="button">Hardest button to button</button>
+      </div>
+    </div>
+  <script type="text/javascript" src="bundle.js"></script></body>
 </html>

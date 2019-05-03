@@ -1,0 +1,126 @@
+* {
+  font-family: avenir;
+	font-size: 18px;
+}
+body {
+  font-family: avenir;
+  /* color: #484848; */
+  /* background-color: #7D4CDB; */
+  /* color: #FFFFFF; */
+  color: #484848;
+  /* background-color: #FFABD3; */
+	/* background-color: #461088; */
+  /* background-color: #BE8CFF; */
+  /* background-color: #872D5F; */
+  /* background-color: #A9BFA6; */
+  /* background-color: #0088CC; */
+  /* background-color: #231F20; */
+  /* background-color: #222D65; */
+  background-color: #D4D8E8;
+  margin-right:15em;
+  margin-left:15em;
+  display: block;
+}
+
+h1 {
+  /* margin: auto; */
+}
+p {
+  margin: 1em;
+}
+.react-select-container {
+  /* width: 25em; */
+  margin: 1em;
+}
+.container {
+  width: 75%;
+  margin: auto;
+}
+.masthead {
+  margin-bottom: 2em;
+  margin-top: 1em;
+  /* color: #FFFFFF; */
+  font: 12px avenir;
+  border-bottom: 1px solid #F8F8F8;
+}
+.masthead-title {
+  /* color: #FFFFFF; */
+  font: 50px avenir;
+  text-align: center;
+}
+.masthead-title a {
+  font: 1.5em avenir;
+  color: #484848;
+  padding-left: 70px;
+  padding-right: 70px;
+}
+
+.slidecontainer {
+  margin: 1em;
+	padding-top:10px;
+	padding-bottom: 10px;
+}
+.slider {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 30%; /* Full-width */
+  height: 25px; /* Specified height */
+  /* background: #d3d3d3; /* Grey background */ */
+  outline: none; /* Remove outline */
+  opacity: 1; /* Set transparency (for mouse-over effects on hover) */
+  -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+  transition: opacity .2s;
+  border-radius: 20px;
+}
+.slider:focus {
+  outline: none;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: #7D4CDB;
+  cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+button {
+  display: block;
+  width: 100%;
+
+  /* height: 50%; */
+  border-radius: 5px;
+  background-color:#FFFFFF;
+  margin-right:auto;
+  margin-left:auto;
+  color: #484848;
+  font-family: avenir;
+}
+button:focus {
+  outline: none;
+}
+.borderless_input:focus {
+  outline: none;
+}
+.borderless_input {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  color: #484848;
+	width: 2em;
+  font-family: avenir;
+  border-bottom: 1px solid #FFFFFF;
+  background-color: #D4D8E8;
+	text-align: center;
+}
+
+.margin_right {
+	 margin-right: 80px;
+}
