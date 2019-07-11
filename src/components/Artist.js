@@ -14,7 +14,7 @@ export default class Artist extends React.Component {
     const { opacity, target } = this.state;
     return (
       <a target="_blank" href={this.props.url} className="hovereffect">
-        <Image src={this.props.src}/>
+        <Image fluid src={this.props.src}/>
         <p className="overlay">{this.props.name}</p>
       </a>
     )

@@ -1,4 +1,29 @@
+import Artists from './Artists'
+import Button from 'react-bootstrap/Button'
+import CreatableSelect from 'react-select/lib/Creatable'
 import React from 'react'
+import ReactDOM from 'react-dom'
+import Select from 'react-select'
+import { ref, genres } from '../data'
+
+function RenderArtists(values) {
+  ReactDOM.render(
+    <Artists values={values}/>,
+    root
+  );
+}
+
+function getUserId(link) {
+  if (link != null & link.length > 10 & link.slice(0, 4) == "http") {
+    var re = /user\/([^/]+)\/playlist/
+    var match = re.exec(link)
+    console.log(link)
+    console.log(match)
+    console.log(match[1])
+    if (match != null) return match[1]
+  }
+  return
+}
 
 const components = {
   DropdownIndicator: null,
@@ -34,8 +59,6 @@ const themes = (theme) => ({
   }
 })
 
-
-
 export default class Recommender extends React.Component<*, State> {
   constructor(props) {
     super(props)
@@ -62,10 +85,9 @@ export default class Recommender extends React.Component<*, State> {
 
   componentDidMount() {
     ref.get().then(snapshot => {
-      snapshot.docs.forEach(doc => {
-        var element = {value: doc.id, label: doc.data()["name"], color: "#00B8D9"}
-        this.setState({artists: [...this.state.artists, element]})
-      })
+      this.setState({artists: snapshot.docs.map(doc => {
+        return {value: doc.id, label: doc.data()["name"], color: "#00B8D9"}
+      })})
     })
   }
 
