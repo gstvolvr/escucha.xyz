@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'react-bootstrap/Image'
+import Figure from 'react-bootstrap/Figure'
 
 export default class Artist extends React.Component {
   constructor(props) {
@@ -13,9 +14,11 @@ export default class Artist extends React.Component {
   render() {
     const { opacity, target } = this.state;
     return (
-      <a target="_blank" href={this.props.url} className="hovereffect">
-        <Image fluid src={this.props.src}/>
-        <p className="overlay">{this.props.name}</p>
+      <a target="_blank" href={this.props.url}>
+        <Figure>
+          <Figure.Image bsPrefix=".img" height={156} width={156} thumbnail fluid rounded src={this.props.src}/>
+          <Figure.Caption>{this.props.name}</Figure.Caption>
+        </Figure>
       </a>
     )
   }
