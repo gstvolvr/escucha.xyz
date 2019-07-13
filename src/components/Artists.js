@@ -17,18 +17,20 @@ export default class Artists extends React.Component {
   async componentDidMount() {
     var items = []
     var chosenArtists = this.props.values
-    var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length)
+    var delta = chosenArtists.length % 2 == 0 ? 0: 1 // if the user chooses 3 artists, get an extra rec per artist
+    var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length) + delta
 
-    var rich = []
+    var rich = {}
     var promises = this.props.values.map(id => this.props.reference.doc(id).collection(this.props.category).limit(recsPerArtist).get())
 
     await Promise.all(promises).then(promise => promise.forEach(snapshot => {
       snapshot.docs.forEach(doc => {
-        rich.push(doc.data())
+        var data = doc.data()
+        rich[data["id"]] = data
       })
     }))
 
-    this.setState({rich: rich})
+    this.setState({rich: Object.values(rich)})
   }
 
   shouldComponentUpdate() {
@@ -37,6 +39,7 @@ export default class Artists extends React.Component {
 
   render() {
     var artistsPerRow = 4
+    console.log(artistsPerRow)
     var cols = []
     var rows = []
     var i = 1
@@ -45,7 +48,7 @@ export default class Artists extends React.Component {
       return <Spinner animation="border" />
     }
 
-    this.state.rich.forEach(r => {
+    this.state.rich.slice(0, this.props.numRecs).forEach(r => {
 
       cols.push(
         <Col key={i}>
