@@ -96,7 +96,7 @@ export default class Recommender extends React.Component<*, State> {
 
   componentDidMount() {
     var ref = this.state.reference
-    var artistsToShow = 120
+    var artistsToShow = 500
     ref.orderBy("connections", "desc").limit(artistsToShow).get().then(snapshot => {
       this.setState({artists: snapshot.docs.map(doc => {
         return {value: doc.id, label: doc.data()["name"], color: "#00B8D9"}
