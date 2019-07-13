@@ -4,7 +4,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 export default class InlineDropdown extends React.Component<*, State> {
   constructor(props) {
     super(props)
-    console.log(this.props)
     this.state = {
       text: this.props.map[this.props.category],
       numRecs: this.props.numRecs
