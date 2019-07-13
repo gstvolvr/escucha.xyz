@@ -16,7 +16,7 @@ export default class Artist extends React.Component {
     return (
       <a target="_blank" href={this.props.url}>
         <Figure>
-          <Figure.Image bsPrefix=".img" height={156} width={156} thumbnail fluid rounded src={this.props.src}/>
+          <Figure.Image bsPrefix=".img" height={234} width={234} thumbnail fluid rounded src={this.props.src}/>
           <Figure.Caption>{this.props.name}</Figure.Caption>
         </Figure>
       </a>
