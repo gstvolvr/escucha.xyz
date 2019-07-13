@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container'
 import React from 'react'
 import Row from 'react-bootstrap/Row'
 import Spinner from 'react-bootstrap/Spinner'
+import 'babel-polyfill';
 
 export default class Artists extends React.Component {
   constructor(props) {
@@ -13,19 +14,21 @@ export default class Artists extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     var items = []
     var chosenArtists = this.props.values
     var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length)
-    console.log(chosenArtists)
-    console.log(recsPerArtist)
-    console.log(this.props.category)
-    this.props.values.forEach(id => this.props.reference.doc(id).collection(this.props.category).get().then(snapshot => {
-      this.setState({rich: (snapshot.docs.slice(0, recsPerArtist).map(doc => {
-        return doc.data()
+
+    var rich = []
+    var promises = this.props.values.map(id => this.props.reference.doc(id).collection(this.props.category).limit(recsPerArtist).get())
+
+    await Promise.all(promises).then(promise => promise.forEach(snapshot => {
+      snapshot.docs.forEach(doc => {
+        rich.push(doc.data())
       })
-    )})
     }))
+
+    this.setState({rich: rich})
   }
 
   shouldComponentUpdate() {
@@ -60,7 +63,6 @@ export default class Artists extends React.Component {
       }
       i += 1
     })
-    console.log(rows)
 
     return (
       <Container fluid>
