@@ -91,16 +91,12 @@ export default class Recommender extends React.Component<*, State> {
   }
 
   handleChange = (newValue: any, actionMeta: any) => {
-    console.group('Value Changed')
-    console.log(newValue)
-    console.log(`action: ${actionMeta.action}`)
     this.setState({chosen: newValue.map(element => element["value"])})
-    console.groupEnd()
   }
 
   componentDidMount() {
     var ref = this.state.reference
-    var artistsToShow = 10
+    var artistsToShow = 120
     ref.orderBy("connections", "desc").limit(artistsToShow).get().then(snapshot => {
       this.setState({artists: snapshot.docs.map(doc => {
         return {value: doc.id, label: doc.data()["name"], color: "#00B8D9"}
@@ -113,16 +109,11 @@ export default class Recommender extends React.Component<*, State> {
     switch (event.key) {
       case 'Enter':
       case 'Tab':
-        console.group('Value Added');
-        console.log(value);
-        console.log(this.state.inputValue);
-        console.groupEnd();
         this.setState({
           inputValue: '',
           value: [...this.state.value, this.state.inputValue],
           artists: artists
         })
-        console.log(this.state.value)
         event.preventDefault();
     }
   }
