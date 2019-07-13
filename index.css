@@ -1,5 +1,8 @@
-body {
+* {
+  font-size: 24px;
   font-family: avenir;
+}
+body {
   background-color: #f3f3f3;
 }
 .img {
@@ -7,22 +10,9 @@ body {
     background-position: center center;
     background-repeat: no-repeat;
 }
-.input {
-  border-top:none;
-  border-left:none;
-  border-right:none;
-  border-bottom: 1px solid;
-  padding:none;
-  margin:none;
-  width:20px;
-  background-color: #f3f3f3;
-  font-family: avenir;
-  font-size: 14px;
-
-}
 .dropdown {
   position: relative;
   display: inline-block;
   padding: 4px;
-  height:5px;
+  height: 5px;
 }
