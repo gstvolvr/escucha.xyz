@@ -22,7 +22,7 @@ export default class Description extends React.Component<*, State> {
           <p><br/> Simple <strong>artist recommender</strong>. Fill out the form, and start discovering new music!</p>
         </Tab>
         <Tab eventKey="details" title="How does it work?">
-          <br/>It recommends artists based on how frequently they show up in playlists together. The data is composed of <strong>1.7 million</strong> artists and over <strong>10 million</strong> public Spotify playlists. I store recommendations for the top <strong>1 thousand</strong> artists. Each artist has up to <strong>100</strong> recommendations under <strong>5</strong> separate categories.
+          <br/>It recommends artists based on how frequently they show up in playlists together. The data is composed of <strong>1.7 million</strong> artists and over <strong>10 million</strong> public Spotify playlists. I store recommendations for the top <strong>1 thousand</strong> artists. Each artist has up to <strong>500</strong> recommendations across these <strong>5</strong> categories.
           <br/><br/>
           <Table variant="light" striped bordered hover size="sm">
             <thead>
