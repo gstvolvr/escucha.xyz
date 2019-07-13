@@ -21,12 +21,16 @@ export default class Artists extends React.Component {
     var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length) + delta
 
     var rich = {}
-    var promises = this.props.values.map(id => this.props.reference.doc(id).collection(this.props.category).limit(recsPerArtist).get())
+    // don't limit collection to randomly choose subset later (i.e. don't do .colleciton(this.props.category).limit(recsPerArtist))
+    var promises = this.props.values.map(id => this.props.reference.doc(id).collection(this.props.category).get())
+    var fudgeFactor = 0.1
 
     await Promise.all(promises).then(promise => promise.forEach(snapshot => {
       snapshot.docs.forEach(doc => {
-        var data = doc.data()
-        rich[data["id"]] = data
+        if (Math.random() < (recsPerArtist / 100) + fudgeFactor) {
+          var data = doc.data()
+          rich[data["id"]] = data
+        }
       })
     }))
 
@@ -39,7 +43,6 @@ export default class Artists extends React.Component {
 
   render() {
     var artistsPerRow = 4
-    console.log(artistsPerRow)
     var cols = []
     var rows = []
     var i = 1
