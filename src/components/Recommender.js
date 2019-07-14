@@ -5,17 +5,17 @@ import Description from './Description'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Select from 'react-select'
+import FirebaseContext from './FirebaseContext'
 
-function RenderArtists(chosen, numRecs, category, ref) {
+function RenderArtists(chosen, numRecs, category, firebase) {
   if (chosen.length === 0) {
     alert("I'll need a bit more information from you")
     return
   }
-  var root = document.getElementById('root')
 
   ReactDOM.render(
-    <Artists values={chosen} numRecs={numRecs} category={category} reference={ref}/>,
-    root
+    <Artists values={chosen} numRecs={numRecs} category={category} firebase={firebase}/>,
+    document.getElementById('root')
   )
 }
 
@@ -47,7 +47,9 @@ const themes = (theme) => ({
   }
 })
 
+
 export default class Recommender extends React.Component<*, State> {
+  static contextType = FirebaseContext
   constructor(props) {
     super(props)
 
@@ -58,7 +60,6 @@ export default class Recommender extends React.Component<*, State> {
       chosen: [],
       text: "somewhat well known",
       category: "recommendations-0.05",
-      reference: this.props.reference,
       numRecs: 8
     }
   }
@@ -72,9 +73,8 @@ export default class Recommender extends React.Component<*, State> {
   }
 
   componentDidMount() {
-    var ref = this.state.reference
     var artistsToShow = 500
-    ref.orderBy("connections", "desc").limit(artistsToShow).get().then(snapshot => {
+    this.props.firebase.ref.orderBy("connections", "desc").limit(artistsToShow).get().then(snapshot => {
       this.setState({artists: snapshot.docs.map(doc => {
         return {value: doc.id, label: doc.data()["name"], color: "#00B8D9"}
       })})
@@ -123,9 +123,9 @@ export default class Recommender extends React.Component<*, State> {
         <br></br>
         <InlineDropdown map={map} handleFirstChange={this.handleFirstChange.bind(this)} handleSecondChange={this.handleSecondChange.bind(this)} numRecs={this.state.numRecs} category={this.state.category} />
         <br></br>
-        <Button variant="primary" size="sm" onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.reference)} block>
-          See artists
-        </Button>
+          <Button variant="primary" size="sm" onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.firebase)} block>
+            See artists
+          </Button>
       </div>
     )
   }

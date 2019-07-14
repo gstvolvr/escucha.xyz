@@ -4,25 +4,27 @@ import Container from 'react-bootstrap/Container'
 import React from 'react'
 import Row from 'react-bootstrap/Row'
 import Spinner from 'react-bootstrap/Spinner'
-// import 'babel-polyfill';
+import FirebaseContext from './FirebaseContext'
 
-export default class Artists extends React.Component {
+export default class Artists extends React.Component<*, State> {
+  static contextType = FirebaseContext
   constructor(props) {
     super(props)
+
     this.state = {
       rich: []
     }
   }
 
   async componentDidMount() {
-    var items = []
     var chosenArtists = this.props.values
     var delta = chosenArtists.length % 2 === 0 ? 0: 1 // if the user chooses 3 artists, get an extra rec per artist
     var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length) + delta
 
     var rich = {}
     // don't limit collection to randomly choose subset later (i.e. don't do .colleciton(this.props.category).limit(recsPerArtist))
-    var promises = this.props.values.map(id => this.props.reference.doc(id).collection(this.props.category).get())
+    var ref = this.props.firebase.ref
+    var promises = this.props.values.map(id => ref.doc(id).collection(this.props.category).get())
     var fudgeFactor = 0.1
 
     await Promise.all(promises).then(promise => promise.forEach(snapshot => {
