@@ -42,7 +42,8 @@ export default class Artists extends React.Component {
   }
 
   render() {
-    var artistsPerRow = 4
+    // show different number of artists per row depending on whether it's a mobile browser or not
+    var artistsPerRow = (typeof window.orientation !== 'undefined')? 2: 4
     var cols = []
     var rows = []
     var i = 1
@@ -52,7 +53,6 @@ export default class Artists extends React.Component {
     }
 
     this.state.rich.slice(0, this.props.numRecs).forEach(r => {
-
       cols.push(
         <Col key={i}>
           <Artist src={r["image_url"]} name={r["name"]} url={r["spotify_url"]}/>
