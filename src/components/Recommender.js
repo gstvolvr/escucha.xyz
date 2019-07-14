@@ -1,7 +1,6 @@
 import Artists from './Artists'
 import Button from 'react-bootstrap/Button'
 import InlineDropdown from './InlineDropdown'
-import CreatableSelect from 'react-select/lib/Creatable'
 import Description from './Description'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -133,23 +132,21 @@ export default class Recommender extends React.Component<*, State> {
   render() {
     const { inputValue, value, artists, chosen } = this.state;
     return (
-      <div className='recommender'>
+      <div className='cover-container'>
         <Description />
-        <div className='react-select-container'>
-            <Select
-              isMulti
-              defaultInputValue=""
-              onChange={this.handleChange}
-              defaultValue={[]}
-              options={this.state.artists}
-              placeholder="What artists are you listening to these days?"
-              theme={themes}
-            />
-        </div>
+        <Select
+          isMulti
+          defaultInputValue=""
+          onChange={this.handleChange}
+          defaultValue={[]}
+          options={this.state.artists}
+          placeholder="Who do you listen to?"
+          theme={themes}
+        />
         <br></br>
         <InlineDropdown map={map} handleFirstChange={this.handleFirstChange.bind(this)} handleSecondChange={this.handleSecondChange.bind(this)} numRecs={this.state.numRecs} category={this.state.category} />
         <br></br>
-        <Button variant="primary" onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.reference)} block>
+        <Button variant="primary" size="sm" onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.reference)} block>
           See artists
         </Button>
       </div>
