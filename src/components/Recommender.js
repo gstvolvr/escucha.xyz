@@ -7,24 +7,16 @@ import ReactDOM from 'react-dom'
 import Select from 'react-select'
 
 function RenderArtists(chosen, numRecs, category, ref) {
-  if (chosen.length == 0) {
+  if (chosen.length === 0) {
     alert("I'll need a bit more information from you")
     return
   }
+  var root = document.getElementById('root')
 
   ReactDOM.render(
     <Artists values={chosen} numRecs={numRecs} category={category} reference={ref}/>,
     root
   )
-}
-
-function getUserId(link) {
-  if (link != null & link.length > 10 & link.slice(0, 4) == "http") {
-    var re = /user\/([^/]+)\/playlist/
-    var match = re.exec(link)
-    if (match != null) return match[1]
-  }
-  return
 }
 
 const map = {
@@ -34,20 +26,6 @@ const map = {
   "recommendations-1.0": "somewhat obscure",    // remove top 1%
   "recommendations-2.0": "totally obscure"      // remove top 2%
 }
-
-const components = {
-  DropdownIndicator: null,
-}
-
-const rawOption = (label: string) => ({
-  label: label,
-  value: label,
-})
-
-const createOption = (label: string) => ({
-  label: getUserId(label),
-  value: getUserId(label),
-})
 
 const themes = (theme) => ({
   ...theme,
@@ -111,7 +89,7 @@ export default class Recommender extends React.Component<*, State> {
         this.setState({
           inputValue: '',
           value: [...this.state.value, this.state.inputValue],
-          artists: artists
+          artists: this.state.artists
         })
         event.preventDefault();
     }
@@ -130,7 +108,6 @@ export default class Recommender extends React.Component<*, State> {
   }
 
   render() {
-    const { inputValue, value, artists, chosen } = this.state;
     return (
       <div className='cover-container'>
         <Description />

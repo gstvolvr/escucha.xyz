@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container'
 import React from 'react'
 import Row from 'react-bootstrap/Row'
 import Spinner from 'react-bootstrap/Spinner'
-import 'babel-polyfill';
+// import 'babel-polyfill';
 
 export default class Artists extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ export default class Artists extends React.Component {
   async componentDidMount() {
     var items = []
     var chosenArtists = this.props.values
-    var delta = chosenArtists.length % 2 == 0 ? 0: 1 // if the user chooses 3 artists, get an extra rec per artist
+    var delta = chosenArtists.length % 2 === 0 ? 0: 1 // if the user chooses 3 artists, get an extra rec per artist
     var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length) + delta
 
     var rich = {}
@@ -38,7 +38,7 @@ export default class Artists extends React.Component {
   }
 
   shouldComponentUpdate() {
-    return this.state.rich.length == 0
+    return this.state.rich.length === 0
   }
 
   render() {
@@ -48,7 +48,7 @@ export default class Artists extends React.Component {
     var rows = []
     var i = 1
 
-    if (this.state.rich.length == 0) {
+    if (this.state.rich.length === 0) {
       return <Spinner animation="border" />
     }
 
@@ -59,7 +59,7 @@ export default class Artists extends React.Component {
         </Col>
       )
 
-      if (i % artistsPerRow == 0 & i != 0) {
+      if (i % artistsPerRow === 0 & i !== 0) {
         rows.push(
           <Row key={i}>
             {cols}
