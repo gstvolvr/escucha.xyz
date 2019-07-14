@@ -13,10 +13,14 @@ export default class Artist extends React.Component {
 
   render() {
     const { opacity, target } = this.state;
+    // increase size of the image if on laptop
+    var imgSize = (typeof window.orientation !== 'undefined')? 117: 234
+    console.log(imgSize)
+
     return (
       <a target="_blank" href={this.props.url}>
         <Figure>
-          <Figure.Image bsPrefix=".img" height={234} width={234} thumbnail fluid rounded src={this.props.src}/>
+          <Figure.Image bsPrefix=".img" height={imgSize} width={imgSize} fluid rounded src={this.props.src}/>
           <Figure.Caption>{this.props.name}</Figure.Caption>
         </Figure>
       </a>
