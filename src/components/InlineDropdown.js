@@ -1,6 +1,11 @@
 import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown'
 
+// hacky but it works
+function addBreak() {
+  if (typeof window.orientation !== 'undefined') return <div></div>
+}
+
 export default class InlineDropdown extends React.Component<*, State> {
   constructor(props) {
     super(props)
@@ -12,7 +17,7 @@ export default class InlineDropdown extends React.Component<*, State> {
 
   render() {
     return (
-      <div>
+      <div className="cover-container">
         Show me
         <Dropdown>
           <Dropdown.Toggle variant="secondary" size="sm" id="drop-num">
@@ -26,9 +31,7 @@ export default class InlineDropdown extends React.Component<*, State> {
             <Dropdown.Item id="64">64</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-
-        artists who are
-
+        artists {addBreak()}who are
         <Dropdown>
           <Dropdown.Toggle variant="secondary" size="sm" id="drop">
             {this.props.map[this.props.category]}
