@@ -69,11 +69,12 @@ export default class Recommender extends React.Component<*, State> {
   }
 
   handleChange = (newValue: any, actionMeta: any) => {
+    if (!newValue) return
     this.setState({chosen: newValue.map(element => element["value"])})
   }
 
   componentDidMount() {
-    var artistsToShow = 500
+    var artistsToShow = 750
     this.props.firebase.ref.orderBy("connections", "desc").limit(artistsToShow).get().then(snapshot => {
       this.setState({artists: snapshot.docs.map(doc => {
         return {value: doc.id, label: doc.data()["name"], color: "#00B8D9"}
@@ -81,30 +82,18 @@ export default class Recommender extends React.Component<*, State> {
     })
   }
 
-  handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
-    if (!this.state.inputValue) return;
-    switch (event.key) {
-      case 'Enter':
-      case 'Tab':
-        this.setState({
-          inputValue: '',
-          value: [...this.state.value, this.state.inputValue],
-          artists: this.state.artists
-        })
-        event.preventDefault();
-    }
-  }
-
   handleFirstChange(e) {
-    this.setState({numRecs: e.target.id})
+    if (e !== null) this.setState({numRecs: e.target.id})
   }
 
   handleSecondChange(e) {
-    var id = e.target.id
-    this.setState({
-      category: id,
-      text: map[id]
-    })
+    if (e !== null) {
+      var id = e.target.id
+      this.setState({
+        category: id,
+        text: map[id]
+      })
+    }
   }
 
   render() {
@@ -113,19 +102,21 @@ export default class Recommender extends React.Component<*, State> {
         <Description />
         <Select
           isMulti
+          isClearable
           defaultInputValue=""
           onChange={this.handleChange}
           defaultValue={[]}
           options={this.state.artists}
           placeholder="Who do you listen to?"
           theme={themes}
+          closeMenuOnSelect={false}
         />
         <br></br>
         <InlineDropdown map={map} handleFirstChange={this.handleFirstChange.bind(this)} handleSecondChange={this.handleSecondChange.bind(this)} numRecs={this.state.numRecs} category={this.state.category} />
         <br></br>
-          <Button variant="primary" size="sm" onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.firebase)} block>
-            See artists
-          </Button>
+        <Button variant="primary" size="sm" onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.firebase)} block>
+          See artists
+        </Button>
       </div>
     )
   }
