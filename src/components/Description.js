@@ -54,7 +54,6 @@ export default class Description extends React.Component<*, State> {
               </tr>
             </tbody>
           </Table>
-          <p>More on the nitty gritty <a target="_blank" rel="noopener noreferrer" href="https://www.olvr.xyz/posts/2019/04/building-an-artist-recommender-part-i.html">here</a>.</p>
         </Tab>
       </Tabs>
     )
