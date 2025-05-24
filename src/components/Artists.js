@@ -5,6 +5,7 @@ import React from 'react'
 import Row from 'react-bootstrap/Row'
 import Spinner from 'react-bootstrap/Spinner'
 import FirebaseContext from './FirebaseContext'
+import { doc, collection, getDocs } from 'firebase/firestore'
 
 export default class Artists extends React.Component<*, State> {
   static contextType = FirebaseContext
@@ -22,15 +23,19 @@ export default class Artists extends React.Component<*, State> {
     var recsPerArtist = parseInt(this.props.numRecs / chosenArtists.length) + delta
 
     var rich = {}
-    // don't limit collection to randomly choose subset later (i.e. don't do .colleciton(this.props.category).limit(recsPerArtist))
-    var ref = this.props.firebase.ref
-    var promises = this.props.values.map(id => ref.doc(id).collection(this.props.category).get())
+    // don't limit collection to randomly choose subset later
+    var db = this.props.firebase.db
+    var promises = this.props.values.map(id => {
+      const artistDoc = doc(db, "/spotify-artists", id);
+      const artistCollection = collection(artistDoc, this.props.category);
+      return getDocs(artistCollection);
+    });
     var fudgeFactor = 0.1
 
     await Promise.all(promises).then(promise => promise.forEach(snapshot => {
-      snapshot.docs.forEach(doc => {
+      snapshot.docs.forEach(document => {
         if (Math.random() < (recsPerArtist / 100) + fudgeFactor) {
-          var data = doc.data()
+          var data = document.data()
           rich[data["id"]] = data
         }
       })

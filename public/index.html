@@ -5,22 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="Gustavo A. Oliver">
     <title>🎵🎵🎵</title>
-
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="theme-color" content="#2c3e50" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="%PUBLIC_URL%/index.css">
   </head>
   <body>
     <div class="container">
-      <div class="page mx-auto p-3 flex-column">
-        <header class="masthead mb-auto">
-          <h1 class="page-header">
-            <a href="/" title="home" style="font-size: 72px;">/escucha</a>
+      <div class="page mx-auto p-4 flex-column">
+        <header class="masthead mb-4">
+          <h1 class="page-header text-center">
+            <a href="/" title="home" class="site-title">/escucha</a>
           </h1>
+          <p class="text-center site-subtitle">Discover your next favorite artist</p>
         </header>
-        <div id="root" class="coniner-fluid">
-          <script src="/src/index.js">
-          </script>
+        <div id="root" class="container-fluid">
         </div>
+        <footer class="footer mt-2 text-center">
+          <p class="text-muted">© 2025 <a href="https://www.oliver.dev/" target="_blank" rel="noopener noreferrer">Gustavo Oliver</a></p>
+        </footer>
       </div>
     </div>
   </body>
