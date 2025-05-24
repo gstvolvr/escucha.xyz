@@ -12,10 +12,19 @@ export default class Artist extends React.Component {
     var imgSize = (typeof window.orientation !== 'undefined')? 117: 234
 
     return (
-      <a target="_blank" rel="noopener noreferrer" href={this.props.url}>
-        <Figure>
-          <Figure.Image bsPrefix=".img" height={imgSize} width={imgSize} fluid src={this.props.src.replace("www.olvr.xyz", "www.gustavooliver.xyz")}/>
-          <Figure.Caption>{this.props.name}</Figure.Caption>
+      <a target="_blank" rel="noopener noreferrer" href={this.props.url} className="artist-link">
+        <Figure className="artist-figure">
+          <div className="img-container">
+            <Figure.Image 
+              bsPrefix=".img" 
+              height={imgSize} 
+              width={imgSize} 
+              fluid 
+              src={this.props.src.replace("www.olvr.xyz", "www.gustavooliver.xyz")}
+              className="artist-image"
+            />
+          </div>
+          <Figure.Caption className="artist-name">{this.props.name}</Figure.Caption>
         </Figure>
       </a>
     )
