@@ -6,17 +6,17 @@ Implementation details can be found [here](https://www.oliver.dev/posts/2019/08/
 ## Development Requirements
 
 ### Node.js Version
-This project requires Node.js 16.x. Using this version ensures compatibility with all dependencies and avoids OpenSSL-related issues that occur with Node.js 18+.
+This project requires Node.js 22.x.
 
-#### Installing Node.js 16.x
-If you're using nvm (Node Version Manager), you can install and use Node.js 16.x with:
+#### Installing Node.js 22.x
+If you're using nvm (Node Version Manager), you can install and use Node.js 22.x with:
 
 ```bash
-nvm install 16
-nvm use 16
+nvm install 22
+nvm use 22
 ```
 
-Alternatively, you can download Node.js 16.x directly from the [Node.js website](https://nodejs.org/download/release/latest-v16.x/).
+Alternatively, you can download Node.js 22.x directly from the [Node.js website](https://nodejs.org/download/release/latest-v22.x/).
 
 ### Installation
 After ensuring you have the correct Node.js version:

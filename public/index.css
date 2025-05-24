@@ -213,7 +213,8 @@ header, .masthead {
 }
 
 .btn-primary:focus, .btn-primary.btn-lg:focus {
-  box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+  box-shadow: none;
+  outline: none;
 }
 
 /* Tab styling */
@@ -443,10 +444,18 @@ figcaption {
 }
 
 .submit-button:focus {
-  animation: pulse 1.5s infinite;
+  animation: none;
+  box-shadow: none;
+  outline: none;
 }
 
 /* Utility Classes */
+/* Global focus styles - remove all outlines and box-shadows */
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .text-primary {
   color: var(--primary-color) !important;
 }
@@ -513,9 +522,14 @@ figcaption {
   border-color: var(--border-color) !important;
 }
 
-.dropdown-toggle:hover, .dropdown-toggle:focus {
+.dropdown-toggle:hover {
   box-shadow: var(--shadow-sm);
   border-color: var(--secondary-color) !important;
+}
+
+.dropdown-toggle:focus {
+  box-shadow: none;
+  outline: none;
 }
 
 .responsive-break {

@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import InlineDropdown from './InlineDropdown'
 import Description from './Description'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import Select from 'react-select'
 import FirebaseContext from './FirebaseContext'
 import { query, orderBy, limit, getDocs } from 'firebase/firestore'
@@ -14,9 +14,10 @@ function RenderArtists(chosen, numRecs, category, firebase) {
     return
   }
 
-  ReactDOM.render(
-    <Artists values={chosen} numRecs={numRecs} category={category} firebase={firebase}/>,
-    document.getElementById('root')
+  const container = document.getElementById('root');
+  const root = createRoot(container);
+  root.render(
+    <Artists values={chosen} numRecs={numRecs} category={category} firebase={firebase}/>
   )
 }
 
@@ -130,15 +131,16 @@ export default class Recommender extends React.Component<*, State> {
         </div>
 
         <div className="form-group">
-          <Button 
-            variant="primary" 
-            size="lg" 
-            onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.firebase)} 
-            block
-            className="submit-button"
-          >
-            <span className="button-text">Discover New Artists</span>
-          </Button>
+          <div className="d-grid gap-2">
+            <Button 
+              variant="primary" 
+              size="lg" 
+              onClick={() => RenderArtists(this.state.chosen, this.state.numRecs, this.state.category, this.props.firebase)} 
+              className="submit-button w-100"
+            >
+              <span className="button-text">Discover New Artists</span>
+            </Button>
+          </div>
         </div>
       </div>
     )
