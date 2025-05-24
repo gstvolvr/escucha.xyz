@@ -20,7 +20,7 @@ export default class Artist extends React.Component {
               height={imgSize} 
               width={imgSize} 
               fluid 
-              src={this.props.src.replace("www.olvr.xyz", "www.gustavooliver.xyz")}
+              src={this.props.src.replace("www.olvr.xyz", "www.oliver.dev")}
               className="artist-image"
             />
           </div>
