@@ -1,166 +1,156 @@
-const { spawn } = require('child_process');
+const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
-// Create logs directory if it doesn't exist
-const logsDir = path.join(__dirname, 'logs');
-if (!fs.existsSync(logsDir)) {
-    fs.mkdirSync(logsDir, { recursive: true });
-}
+// Create logs directory
+const isProduction = process.env.NODE_ENV === 'production';
+const logsDir = isProduction ? path.join('/tmp', 'logs') : path.join(__dirname, 'logs');
 
-// Set up logging
-const logFile = path.join(logsDir, `app-${new Date().toISOString().replace(/:/g, '-')}.log`);
-const logStream = fs.createWriteStream(logFile, { flags: 'a' });
+// Set up logging (keeping your existing logging setup)
+let logStream = null;
+try {
+    if (!fs.existsSync(logsDir)) {
+        fs.mkdirSync(logsDir, { recursive: true });
+    }
+    const logFile = path.join(logsDir, `app-${new Date().toISOString().replace(/:/g, '-')}.log`);
+    logStream = fs.createWriteStream(logFile, { flags: 'a' });
+} catch (error) {
+    console.error(`Failed to set up logging: ${error.message}`);
+}
 
 function log(message) {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] ${message}`;
     console.log(logMessage);
-    logStream.write(logMessage + '\n');
+    if (logStream) {
+        logStream.write(logMessage + '\n');
+    }
 }
 
-// Log startup information
-log(`Starting application in ${process.env.NODE_ENV || 'development'} mode`);
-log(`Process ID: ${process.pid}`);
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-// Error handling for the main process
+// Track server start time for uptime calculation
+const startTime = new Date();
+
+// Health metrics
+const healthMetrics = {
+    status: 'healthy',
+    uptime: 0,
+    memoryUsage: {},
+    lastChecked: null
+};
+
+// Update health metrics function
+function updateHealthMetrics() {
+    const now = new Date();
+    healthMetrics.uptime = Math.floor((now - startTime) / 1000);
+    healthMetrics.memoryUsage = process.memoryUsage();
+    healthMetrics.lastChecked = now.toISOString();
+
+    const buildDir = process.env.BUILD_DIR || path.join(__dirname, 'build');
+    healthMetrics.buildExists = fs.existsSync(buildDir);
+    healthMetrics.buildDir = buildDir;
+}
+
+// Initial metrics update
+updateHealthMetrics();
+
+// Update metrics every 30 seconds
+setInterval(updateHealthMetrics, 30000);
+
+// Request logging middleware
+app.use((req, res, next) => {
+    log(`${req.method} ${req.url}`);
+    next();
+});
+
+// Serve static files from build directory
+const buildDir = process.env.BUILD_DIR || path.join(__dirname, 'build');
+app.use(express.static(buildDir));
+
+// Health check endpoints
+app.get('/readiness_check', (req, res) => {
+    updateHealthMetrics();
+    if (healthMetrics.buildExists) {
+        res.status(200).send('OK (Ready)');
+    } else {
+        res.status(503).send('Not Ready: Build directory not found');
+    }
+});
+
+app.get('/liveness_check', (req, res) => {
+    updateHealthMetrics();
+    res.status(200).send('OK (Alive)');
+});
+
+app.get('/health', (req, res) => {
+    updateHealthMetrics();
+    res.json(healthMetrics);
+});
+
+// App Engine handlers
+app.get('/_ah/start', (req, res) => {
+    log('Received App Engine start request');
+    res.status(200).send('Application started');
+});
+
+app.get('/_ah/stop', (req, res) => {
+    log('Received App Engine stop request');
+    res.status(200).send('Application stopping');
+    setTimeout(() => process.exit(0), 1000);
+});
+
+// Serve index.html for all other routes (React router support)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(buildDir, 'index.html'));
+});
+
+// Start server
+const server = app.listen(PORT, () => {
+    log(`Server running on port ${PORT}`);
+});
+
+// Error handling
 process.on('uncaughtException', (error) => {
     log(`FATAL: Uncaught exception: ${error.message}`);
-    log(error.stack);
-    // Attempt to shut down gracefully
     shutdown(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
     log(`FATAL: Unhandled rejection at: ${promise}, reason: ${reason}`);
-    // Attempt to shut down gracefully
     shutdown(1);
 });
 
-// Start the server.js to handle health checks
-log('Starting health check server...');
-const serverProcess = spawn('node', ['server.js'], {
-    stdio: 'pipe',
-    shell: true
-});
-
-// Capture server output for logging
-serverProcess.stdout.on('data', (data) => {
-    log(`[HEALTH] ${data.toString().trim()}`);
-});
-
-serverProcess.stderr.on('data', (data) => {
-    log(`[HEALTH ERROR] ${data.toString().trim()}`);
-});
-
-log('Health check server started');
-
-// Handle server process exit
-serverProcess.on('close', (code) => {
-    log(`Health check server exited with code ${code}`);
-    if (code !== 0 && !isShuttingDown) {
-        log('Attempting to restart health check server...');
-        // In production, we might want to restart the server
-        if (process.env.NODE_ENV === 'production') {
-            // Restart logic would go here
-        }
-    }
-});
-
-// Start the React application
-// In production, we serve the built files
-const isProduction = process.env.NODE_ENV === 'production';
-log(`Starting React application in ${isProduction ? 'production' : 'development'} mode...`);
-
-// Determine build directory - use BUILD_DIR env var or default to 'build'
-const buildDir = process.env.BUILD_DIR || path.join(__dirname, 'build');
-log(`Using build directory: ${buildDir}`);
-
-// Set environment variables to address webpack deprecation warnings
-const reactEnv = { 
-    ...process.env, 
-    BROWSER: 'none', // Prevent opening browser
-    // Disable ESLint cache in production to avoid read-only filesystem errors
-    DISABLE_ESLINT_PLUGIN: isProduction ? 'true' : process.env.DISABLE_ESLINT_PLUGIN,
-    ESLINT_NO_DEV_ERRORS: isProduction ? 'true' : process.env.ESLINT_NO_DEV_ERRORS,
-    // Use the new webpack dev server options to avoid deprecation warnings
-    WDS_SOCKET_HOST: process.env.WDS_SOCKET_HOST,
-    WDS_SOCKET_PATH: process.env.WDS_SOCKET_PATH,
-    WDS_SOCKET_PORT: process.env.WDS_SOCKET_PORT,
-    // Set build path for react-scripts
-    BUILD_PATH: buildDir
-};
-
-const reactProcess = spawn(
-    isProduction ? 'npx' : 'react-scripts',
-    isProduction ? ['serve', '-s', buildDir, '-l', '3000'] : ['start'],
-    {
-        stdio: 'pipe',
-        shell: true,
-        env: reactEnv
-    }
-);
-
-// Capture React app output for logging
-reactProcess.stdout.on('data', (data) => {
-    log(`[REACT] ${data.toString().trim()}`);
-});
-
-reactProcess.stderr.on('data', (data) => {
-    log(`[REACT ERROR] ${data.toString().trim()}`);
-});
-
-log('React application started');
-
-// Handle React process exit
-reactProcess.on('close', (code) => {
-    log(`React process exited with code ${code}`);
-    if (!isShuttingDown) {
-        // Kill the server process if React process exits unexpectedly
-        log('React process exited unexpectedly, shutting down...');
-        shutdown(code);
-    }
-});
-
-// Flag to prevent multiple shutdown attempts
+// Graceful shutdown
 let isShuttingDown = false;
-
-// Graceful shutdown function
 function shutdown(exitCode = 0) {
     if (isShuttingDown) return;
     isShuttingDown = true;
 
     log('Shutting down gracefully...');
 
-    // Set a timeout to force exit if graceful shutdown takes too long
     const forceExitTimeout = setTimeout(() => {
         log('Forced exit after timeout');
         process.exit(exitCode);
-    }, 10000); // 10 seconds
-
-    // Clear the timeout if we exit before it triggers
+    }, 10000);
     forceExitTimeout.unref();
 
-    // Kill child processes
-    if (serverProcess) {
-        log('Terminating health check server...');
-        serverProcess.kill('SIGTERM');
-    }
-
-    if (reactProcess) {
-        log('Terminating React application...');
-        reactProcess.kill('SIGTERM');
-    }
-
-    // Close log stream
-    log('Closing log stream...');
-    logStream.end(() => {
-        log('Log stream closed');
-        process.exit(exitCode);
+    server.close(() => {
+        log('Server closed');
+        if (logStream) {
+            logStream.end(() => {
+                log('Log stream closed');
+                process.exit(exitCode);
+            });
+        } else {
+            process.exit(exitCode);
+        }
     });
 }
 
-// Handle process termination signals
+// Handle termination signals
 process.on('SIGINT', () => {
     log('Received SIGINT');
     shutdown(0);
