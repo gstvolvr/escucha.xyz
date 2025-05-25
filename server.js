@@ -23,8 +23,12 @@ function updateHealthMetrics() {
     healthMetrics.memoryUsage = process.memoryUsage();
     healthMetrics.lastChecked = now.toISOString();
 
+    // Determine build directory - use BUILD_DIR env var or default to 'build'
+    const buildDir = process.env.BUILD_DIR || path.join(__dirname, 'build');
+
     // Check if build directory exists (for readiness)
-    healthMetrics.buildExists = fs.existsSync(path.join(__dirname, 'build'));
+    healthMetrics.buildExists = fs.existsSync(buildDir);
+    healthMetrics.buildDir = buildDir;
 }
 
 // Update metrics every 30 seconds
@@ -46,10 +50,28 @@ app.get('/readiness_check', (req, res) => {
     // Check if the application is ready to serve traffic
     // For a React app, we mainly need to ensure the build exists
     if (healthMetrics.buildExists) {
+        console.log(`Readiness check passed: Build directory found at ${healthMetrics.buildDir}`);
         res.status(200).send('OK (Ready)');
     } else {
-        console.error('Readiness check failed: Build directory not found');
-        res.status(503).send('Not Ready: Build directory not found');
+        console.error(`Readiness check failed: Build directory not found at ${healthMetrics.buildDir}`);
+
+        // Try to create the directory if it doesn't exist and we're in a writable location
+        if (healthMetrics.buildDir.startsWith('/tmp/')) {
+            try {
+                fs.mkdirSync(healthMetrics.buildDir, { recursive: true });
+                console.log(`Created build directory at ${healthMetrics.buildDir}`);
+                // Update metrics after creating directory
+                updateHealthMetrics();
+                if (healthMetrics.buildExists) {
+                    res.status(200).send('OK (Ready after creating build directory)');
+                    return;
+                }
+            } catch (error) {
+                console.error(`Failed to create build directory: ${error.message}`);
+            }
+        }
+
+        res.status(503).send(`Not Ready: Build directory not found at ${healthMetrics.buildDir}`);
     }
 });
 
@@ -66,6 +88,25 @@ app.get('/liveness_check', (req, res) => {
 app.get('/health', (req, res) => {
     updateHealthMetrics();
     res.json(healthMetrics);
+});
+
+// Handler for App Engine start request
+app.get('/_ah/start', (req, res) => {
+    console.log('Received App Engine start request');
+    updateHealthMetrics();
+    res.status(200).send('Application started');
+});
+
+// Handler for App Engine stop request
+app.get('/_ah/stop', (req, res) => {
+    console.log('Received App Engine stop request');
+    // Send response before shutting down
+    res.status(200).send('Application stopping');
+
+    // Give some time for the response to be sent before shutting down
+    setTimeout(() => {
+        process.exit(0);
+    }, 1000);
 });
 
 // Start the server

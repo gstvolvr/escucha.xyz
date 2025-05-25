@@ -72,13 +72,32 @@ serverProcess.on('close', (code) => {
 const isProduction = process.env.NODE_ENV === 'production';
 log(`Starting React application in ${isProduction ? 'production' : 'development'} mode...`);
 
+// Determine build directory - use BUILD_DIR env var or default to 'build'
+const buildDir = process.env.BUILD_DIR || path.join(__dirname, 'build');
+log(`Using build directory: ${buildDir}`);
+
+// Set environment variables to address webpack deprecation warnings
+const reactEnv = { 
+    ...process.env, 
+    BROWSER: 'none', // Prevent opening browser
+    // Disable ESLint cache in production to avoid read-only filesystem errors
+    DISABLE_ESLINT_PLUGIN: isProduction ? 'true' : process.env.DISABLE_ESLINT_PLUGIN,
+    ESLINT_NO_DEV_ERRORS: isProduction ? 'true' : process.env.ESLINT_NO_DEV_ERRORS,
+    // Use the new webpack dev server options to avoid deprecation warnings
+    WDS_SOCKET_HOST: process.env.WDS_SOCKET_HOST,
+    WDS_SOCKET_PATH: process.env.WDS_SOCKET_PATH,
+    WDS_SOCKET_PORT: process.env.WDS_SOCKET_PORT,
+    // Set build path for react-scripts
+    BUILD_PATH: buildDir
+};
+
 const reactProcess = spawn(
     isProduction ? 'npx' : 'react-scripts',
-    isProduction ? ['serve', '-s', 'build', '-l', '3000'] : ['start'],
+    isProduction ? ['serve', '-s', buildDir, '-l', '3000'] : ['start'],
     {
         stdio: 'pipe',
         shell: true,
-        env: { ...process.env, BROWSER: 'none' } // Prevent opening browser
+        env: reactEnv
     }
 );
 

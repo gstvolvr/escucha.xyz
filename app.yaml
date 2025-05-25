@@ -23,6 +23,10 @@ readiness_check:
   failure_threshold: 2
   success_threshold: 2
 
+env_variables:
+  BUILD_DIR: "/tmp/build"
+  NODE_ENV: "production"
+
 entrypoint: npm run build && npm run start:main
 
 handlers:
