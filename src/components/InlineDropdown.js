@@ -1,11 +1,6 @@
 import React from 'react'
 import Dropdown from 'react-bootstrap/Dropdown'
 
-// Better responsive handling
-function ResponsiveBreak() {
-  return <span className="responsive-break"></span>
-}
-
 export default class InlineDropdown extends React.Component {
   constructor(props) {
     super(props)
