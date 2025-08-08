@@ -27,7 +27,8 @@
     "fsevents": "^2.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node main.js",
+    "start:dev": "react-scripts start",
     "start:main": "node main.js",
     "build": "DISABLE_ESLINT_PLUGIN=true ESLINT_NO_DEV_ERRORS=true BUILD_PATH=${BUILD_DIR:-build} react-scripts build",
     "serve": "npm run build && npm run start:prod",
