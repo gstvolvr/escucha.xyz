@@ -1,0 +1,41 @@
+# Exclude node_modules
+node_modules/
+
+# Exclude git and git related files
+.git/
+.gitignore
+
+# Exclude local development files
+.env
+.env.*
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Exclude IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Exclude test files
+__tests__/
+*.test.js
+*.spec.js
+
+# Exclude documentation
+README.md
+LICENSE
+*.md
+
+# Exclude Firebase specific files (if not needed for GCP)
+.firebase/
+.firebaserc
+
+# Don't exclude these files
+!.env.yaml
+!app.yaml
+
+# Exclude build artifcats
+build/
